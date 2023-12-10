@@ -49,6 +49,8 @@ int8_t BMM150Compass::i2c_write_static(uint8_t dev_id, uint8_t reg_addr, uint8_t
 // BMM150の初期化
 int8_t BMM150Compass::initialize()
 {
+	USBSerial.println("BMM150 initialization...");
+	
 	int8_t rslt = BMM150_OK;
 
 	// BMM150センサのI2Cアドレスを設定
