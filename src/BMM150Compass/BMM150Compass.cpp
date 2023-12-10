@@ -1,5 +1,7 @@
 #include "BMM150Compass.h"
 #include "M5_BMM150_DEFS.h"
+#include <Wire.h>
+#include "Arduino.h"
 
 // コンストラクタ
 BMM150Compass::BMM150Compass(uint8_t sda, uint8_t scl) : _sda(sda), _scl(scl)
@@ -52,8 +54,8 @@ int8_t BMM150Compass::initialize()
 {
 	dev.dev_id = 0x13;
 	dev.intf = BMM150_I2C_INTF;
-	// dev.read = i2c_read;
-	// dev.write = i2c_write;
+	dev.read = i2c_read;
+	dev.write = i2c_write;
 	dev.delay_ms = delay;
 
 	mag_max.x = mag_max.y = mag_max.z = -2000;

@@ -16,6 +16,7 @@ public:
 	int8_t initialize();
 	void calibrate(uint32_t calibrate_time);
 	float readHeading();
+	void offset_load();
 
 private:
 	Preferences prefs;
@@ -29,7 +30,6 @@ private:
 	int8_t i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len);
 	int8_t i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
 	void offset_save();
-	void offset_load();
 };
 
 #endif
