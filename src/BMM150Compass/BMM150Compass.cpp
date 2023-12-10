@@ -1,7 +1,4 @@
 #include "BMM150Compass.h"
-#include "M5_BMM150_DEFS.h"
-#include <Wire.h>
-#include "Arduino.h"
 
 // コンストラクタ
 BMM150Compass::BMM150Compass(uint8_t sda, uint8_t scl) : _sda(sda), _scl(scl)
