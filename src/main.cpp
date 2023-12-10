@@ -52,29 +52,47 @@ int8_t bmm150_initialization()
 {
   int8_t rslt = BMM150_OK;
 
-  dev.dev_id = 0x10;          // Device address setting.  设备地址设置
-  dev.intf = BMM150_I2C_INTF; // SPI or I2C interface setup.  SPI或I2C接口设置
-  dev.read = i2c_read;        // Read the bus pointer.  读总线指针
-  dev.write = i2c_write;      // Write the bus pointer.  写总线指针
+  // BMM150センサのI2Cアドレスを設定
+  // https://wiki.seeedstudio.com/Grove-3-Axis_Digitial_Compass_v2.0/
+  dev.dev_id = 0x13;
+
+  // インターフェイスとしてI2Cを使用する設定
+  dev.intf = BMM150_I2C_INTF;
+
+  // I2C通信でデータを読み込むための関数を指定
+  dev.read = i2c_read;
+
+  // I2C通信でデータを書き込むための関数を指定
+  dev.write = i2c_write;
+
+  // センサとの通信に使用する遅延時間を設定するための関数を指定
   dev.delay_ms = delay;
 
-  // Set the maximum range range
-  // 设置最大范围区间
+  // センサが測定できる磁場の最大値を設定
   mag_max.x = -2000;
   mag_max.y = -2000;
   mag_max.z = -2000;
 
-  // Set the minimum range
-  // 设置最小范围区间
+  // センサが測定できる磁場の最小値を設定
   mag_min.x = 2000;
   mag_min.y = 2000;
   mag_min.z = 2000;
 
-  rslt = bmm150_init(&dev); // Memory chip ID.  存储芯片ID
+  // BMM150センサの初期化を行い、チップIDをメモリに保存
+  rslt = bmm150_init(&dev);
+
+  // センサの電源モードを通常モードに設定
   dev.settings.pwr_mode = BMM150_NORMAL_MODE;
-  rslt |= bmm150_set_op_mode(&dev); // Set the sensor power mode.  设置传感器电源工作模式
+  rslt |= bmm150_set_op_mode(&dev);
+
+  // センサのプリセットモードを拡張モードに設定
   dev.settings.preset_mode = BMM150_PRESETMODE_ENHANCED;
-  rslt |= bmm150_set_presetmode(&dev); // Set the preset mode of .  设置传感器的预置模式
+  rslt |= bmm150_set_presetmode(&dev);
+
+  // rsltの結果をUSBシリアルに出力
+  USBSerial.printf("bmm150_init result: %d\n", rslt);
+
+  // 初期化の結果を返す（BMM150_OKは成功、それ以外はエラー）
   return rslt;
 }
 
@@ -141,18 +159,18 @@ void bmm150_calibrate(uint32_t calibrate_time)
 
 void setup()
 {
+  USBSerial.begin(115200); // シリアル通信の初期化
+
   Wire.begin(PIN_SDA, PIN_SCL); // SDAとSCLのピン番号と周波数を必要に応じて変更
 
-  USBSerial.begin(115200); // シリアル通信の初期化
+  delay(3000);
 
   USBSerial.println("BMM150 initialization...");
 
   if (bmm150_initialization() != BMM150_OK)
   {
-    USBSerial.println("BMM150 initialization failed.");
     while (1)
     {
-      USBSerial.println("BMM150 initialization failed.");
       delay(100); // エラーが発生した場合は無限ループ
     }
   }
