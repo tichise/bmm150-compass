@@ -1,0 +1,16 @@
+{
+  "name": "BMM150Compass",
+  "description": "About This wrapper class is designed to simplify the use of the m5stack/M5_BMM150 library: the BMM150 is a digital magnetometer from Bosch that is compatible with the M5Stack module.",
+  "keywords": "BMM150",
+  "authors": {
+    "name": "tichise",
+    "url": "https://github.com/tichise"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tichise/bmm150-compass.git"
+  },
+  "version": "0.8.0",
+  "frameworks": "arduino",
+  "platforms": "espressif32"
+}
