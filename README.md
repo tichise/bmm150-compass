@@ -28,4 +28,4 @@ lib_deps =
 - ライブラリ依存関係: URL https://github.com/tichise/bmm150-compass.git を直接指定しています。
 
 ## サンプル
-`https://github.com/tichise/bmm150-compass/tree/main/examples/m5stamp-s3`を参考にしてください。
+[bmm150-compass/examples/m5stamp-s3/BasicCompassExample.ino at main · tichise/bmm150-compass](https://github.com/tichise/bmm150-compass/blob/main/examples/m5stamp-s3/BasicCompassExample.ino)を参考にしてください。
