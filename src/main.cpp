@@ -143,20 +143,29 @@ void setup()
 {
   Wire.begin(PIN_SDA, PIN_SCL); // SDAとSCLのピン番号と周波数を必要に応じて変更
 
+  USBSerial.begin(115200); // シリアル通信の初期化
+
+  USBSerial.println("BMM150 initialization...");
+
   if (bmm150_initialization() != BMM150_OK)
   {
     USBSerial.println("BMM150 initialization failed.");
     while (1)
     {
+      USBSerial.println("BMM150 initialization failed.");
       delay(100); // エラーが発生した場合は無限ループ
     }
   }
+
+  USBSerial.println("BMM150 initialization success.");
 
   bmm150_offset_load();
 }
 
 void loop()
 {
+  USBSerial.println("BMM150 read data...");
+
   static bool isCalibrated = false;
 
   if (!isCalibrated)
@@ -165,6 +174,8 @@ void loop()
     bmm150_calibrate(10000); // キャリブレーションを実行
     isCalibrated = true;
   }
+
+  USBSerial.println("Reading data...");
 
   bmm150_read_mag_data(&dev);
   float head_dir = atan2(dev.data.x - mag_offset.x, dev.data.y - mag_offset.y) * 180.0 / M_PI;
