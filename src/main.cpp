@@ -6,17 +6,19 @@
 #define PIN_SCL 15
 
 // BMM150Compassのインスタンスを作成
-BMM150Compass compass(PIN_SDA, PIN_SCL);
+BMM150Compass compass;
 
 void setup()
 {
+  Wire.begin(PIN_SDA, PIN_SCL);
+
   delay(3000);
   USBSerial.println("Starting BMM150 Compass example...");
 
   // シリアル通信の初期化
   USBSerial.begin(115200);
-  while (!Serial)
-    ; // シリアルポートが利用可能になるまで待機
+
+  compass = BMM150Compass();
 
   // センサーの初期化
   if (compass.initialize() != BMM150_OK)

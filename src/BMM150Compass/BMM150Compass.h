@@ -10,7 +10,7 @@
 class BMM150Compass
 {
 public:
-	BMM150Compass(uint8_t sda, uint8_t scl);
+	BMM150Compass();
 	~BMM150Compass();
 
 	int8_t initialize();

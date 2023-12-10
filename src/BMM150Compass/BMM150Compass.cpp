@@ -1,9 +1,8 @@
 #include "BMM150Compass.h"
 
 // コンストラクタ
-BMM150Compass::BMM150Compass(uint8_t sda, uint8_t scl) : _sda(sda), _scl(scl)
+BMM150Compass::BMM150Compass()
 {
-	Wire.begin(_sda, _scl);
 }
 
 // デストラクタ
@@ -50,7 +49,7 @@ int8_t BMM150Compass::i2c_write_static(uint8_t dev_id, uint8_t reg_addr, uint8_t
 int8_t BMM150Compass::initialize()
 {
 	USBSerial.println("BMM150 initialization...");
-	
+
 	int8_t rslt = BMM150_OK;
 
 	// BMM150センサのI2Cアドレスを設定
