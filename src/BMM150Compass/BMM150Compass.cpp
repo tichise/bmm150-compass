@@ -14,42 +14,55 @@ BMM150Compass::~BMM150Compass()
 // I2C読み込み関数
 int8_t BMM150Compass::i2c_read_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len)
 {
+	// データを読み込む
 	Wire.beginTransmission(dev_id);
+
+	// レジスタアドレスを送信
 	Wire.write(reg_addr);
+
+	// 送信結果を返す
 	if (Wire.endTransmission() != 0)
 	{
+		// 送信に失敗した場合はエラーを返す
 		return BMM150_E_DEV_NOT_FOUND;
 	}
 
+	// データを読み込む
 	Wire.requestFrom((int)dev_id, (int)len);
 	uint8_t i = 0;
+
 	while (Wire.available())
 	{
 		read_data[i++] = Wire.read();
 	}
 
+	// 送信に成功した場合は成功を返す
 	return BMM150_OK;
 }
 
 // I2C書き込み関数
 int8_t BMM150Compass::i2c_write_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
+	// データを書き込む
 	Wire.beginTransmission(dev_id);
 	Wire.write(reg_addr);
 	Wire.write(data, len);
+
+	// 送信結果を返す
 	if (Wire.endTransmission() != 0)
 	{
+		// 送信に失敗した場合はエラーを返す
 		return BMM150_E_DEV_NOT_FOUND;
 	}
 
+	// 送信に成功した場合は成功を返す
 	return BMM150_OK;
 }
 
 // BMM150の初期化
 int8_t BMM150Compass::initialize()
 {
-	USBSerial.println("BMM150 initialization...");
-
+	// BMM150センサの初期化
 	int8_t rslt = BMM150_OK;
 
 	// BMM150センサのI2Cアドレスを設定
@@ -100,6 +113,8 @@ int8_t BMM150Compass::initialize()
 void BMM150Compass::offset_save()
 {
 	prefs.begin("bmm150", false);
+
+	// オフセットの保存に成功した場合は、mag_offsetを保存
 	prefs.putBytes("offset", (uint8_t *)&mag_offset, sizeof(bmm150_mag_data));
 	prefs.end();
 }
@@ -107,8 +122,10 @@ void BMM150Compass::offset_save()
 // オフセットの読み込み
 void BMM150Compass::offset_load()
 {
+	// オフセットの読み込み
 	if (prefs.begin("bmm150", true))
 	{
+		// オフセットの読み込みに成功した場合は、mag_offsetに読み込んだ値を設定
 		prefs.getBytes("offset", (uint8_t *)&mag_offset, sizeof(bmm150_mag_data));
 		prefs.end();
 	}
@@ -117,13 +134,17 @@ void BMM150Compass::offset_load()
 // キャリブレーション
 void BMM150Compass::calibrate(uint32_t calibrate_time)
 {
-	// bbm150 data calibrate.  bbm150数据校准
+	// BMM150のデータをキャリブレーションする
 	uint32_t calibrate_timeout = 0;
 
+	// キャリブレーションのタイムアウト時間を設定
 	calibrate_timeout = millis() + calibrate_time;
-	USBSerial.printf("Go calibrate, use %d ms \r\n", calibrate_time); // The serial port outputs formatting characters.  串口输出格式化字符
+
+	// キャリブレーションの開始をUSBシリアルに出力
+	USBSerial.printf("Go calibrate, use %d ms \r\n", calibrate_time);
 	USBSerial.printf("running ...");
 
+	// キャリブレーションの開始時間からタイムアウト時間まで繰り返す
 	while (calibrate_timeout > millis())
 	{
 		bmm150_read_mag_data(&dev); // read the magnetometer data from registers.  从寄存器读取磁力计数据
@@ -145,11 +166,15 @@ void BMM150Compass::calibrate(uint32_t calibrate_time)
 		delay(100);
 	}
 
+	// mag_offsetを計算。mag_maxとmag_minの中間値を使用
 	mag_offset.x = (mag_max.x + mag_min.x) / 2;
 	mag_offset.y = (mag_max.y + mag_min.y) / 2;
 	mag_offset.z = (mag_max.z + mag_min.z) / 2;
+
+	// オフセットの保存
 	offset_save();
 
+	// キャリブレーションの終了をUSBシリアルに出力
 	USBSerial.printf("\n calibrate finish ... \r\n");
 	USBSerial.printf("mag_max.x: %.2f x_min: %.2f \t", mag_max.x, mag_min.x);
 	USBSerial.printf("y_max: %.2f y_min: %.2f \t", mag_max.y, mag_min.y);
