@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include "BMM150Compass/BMM150Compass.h"
+// #include "BMM150Compass/BMM150Compass.h"
+#include <BMM150Compass.h>
 
 // SDAとSCLのピン番号を定義（あなたのハードウェア設定に合わせて変更してください）
 #define PIN_SDA 13
