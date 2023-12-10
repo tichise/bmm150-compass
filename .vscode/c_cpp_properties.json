@@ -10,6 +10,7 @@
             "includePath": [
                 "/Users/tichise/Documents/PlatformIO/Projects/m5stamp-s3-bmm150/include",
                 "/Users/tichise/Documents/PlatformIO/Projects/m5stamp-s3-bmm150/src",
+                "/Users/tichise/Documents/PlatformIO/Projects/m5stamp-s3-bmm150/.pio/libdeps/m5stack-stamps3/M5_BMM150/src",
                 "/Users/tichise/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/newlib/platform_include",
                 "/Users/tichise/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/freertos/include",
                 "/Users/tichise/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/freertos/include/esp_additions/freertos",
@@ -243,6 +244,7 @@
                 "path": [
                     "/Users/tichise/Documents/PlatformIO/Projects/m5stamp-s3-bmm150/include",
                     "/Users/tichise/Documents/PlatformIO/Projects/m5stamp-s3-bmm150/src",
+                    "/Users/tichise/Documents/PlatformIO/Projects/m5stamp-s3-bmm150/.pio/libdeps/m5stack-stamps3/M5_BMM150/src",
                     "/Users/tichise/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/newlib/platform_include",
                     "/Users/tichise/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/freertos/include",
                     "/Users/tichise/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/freertos/include/esp_additions/freertos",
