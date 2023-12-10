@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/tichise/bmm150-compass.git"
   },
-  "version": "0.8.4",
+  "version": "0.8.5",
   "frameworks": "arduino",
   "platforms": "espressif32",
   "dependencies": {
