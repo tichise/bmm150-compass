@@ -1,6 +1,6 @@
 
 # bmm150-compass
-This wrapper is designed to simplify the use of the m5stack/M5_BMM150 library. The BMM150 is a digital geomagnetic sensor by Bosch, compatible with M5Stack modules. This wrapper class streamlines the initialization of the geomagnetic sensor, reading of data, and the calibration process, making it easier to use in Arduino sketches.
+This wrapper is designed to simplify the use of the m5stack/M5_BMM150 library. The BMM150 is a digital geomagnetic sensor by Bosch, compatible with M5Stack modules. This wrapper streamlines the initialization of the geomagnetic sensor, reading of data, and the calibration process, making it easier to use in Arduino sketches.
 
 ## Key Features:
 - Initialization and Setup: Initiates and configures the BMM150 sensor via I2C communication. Offers options to customize the sensor's operational modes and settings.
@@ -32,7 +32,7 @@ This configuration considers the following:
 Refer to [bmm150-compass/examples/m5stamp-s3/BasicCompassExample.ino at main · tichise/bmm150-compass](https://github.com/tichise/bmm150-compass/blob/main/examples/m5stamp-s3/BasicCompassExample.ino) for an example.
 
 # bmm150-compass（日本語）
-このラッパーは、[m5stack/M5\_BMM150](https://github.com/m5stack/M5_BMM150)ライブラリを簡単に使用できるように設計されています。BMM150は、Boschのデジタル地磁気センサーで、M5Stackモジュールに対応しています。このラッパークラスは、地磁気センサーの初期化、データの読み取り、およびキャリブレーションプロセスを簡素化し、Arduinoスケッチでの使用を容易にします。
+このラッパーは、[m5stack/M5\_BMM150](https://github.com/m5stack/M5_BMM150)ライブラリを簡単に使用できるように設計されています。BMM150は、Boschのデジタル地磁気センサーで、M5Stackモジュールに対応しています。このラッパーは、地磁気センサーの初期化、データの読み取り、およびキャリブレーションプロセスを簡素化し、Arduinoスケッチでの使用を容易にします。
 
 ## 主な機能：
 - 初期化と設定:I2C通信を介してBMM150センサーの初期化と設定を行います。
