@@ -18,6 +18,9 @@ public:
 	float readHeading();
 	void offset_load();
 
+	static int8_t i2c_read_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len);
+	static int8_t i2c_write_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
+
 private:
 	Preferences prefs;
 	bmm150_dev dev;
@@ -27,8 +30,6 @@ private:
 
 	uint8_t _sda, _scl;
 
-	int8_t i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len);
-	int8_t i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
 	void offset_save();
 };
 

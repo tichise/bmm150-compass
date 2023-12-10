@@ -16,7 +16,7 @@ BMM150Compass::~BMM150Compass()
 }
 
 // I2C読み込み関数
-int8_t BMM150Compass::i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len)
+int8_t BMM150Compass::i2c_read_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len)
 {
 	Wire.beginTransmission(dev_id);
 	Wire.write(reg_addr);
@@ -36,7 +36,7 @@ int8_t BMM150Compass::i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_d
 }
 
 // I2C書き込み関数
-int8_t BMM150Compass::i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
+int8_t BMM150Compass::i2c_write_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
 	Wire.beginTransmission(dev_id);
 	Wire.write(reg_addr);
@@ -54,8 +54,10 @@ int8_t BMM150Compass::initialize()
 {
 	dev.dev_id = 0x13;
 	dev.intf = BMM150_I2C_INTF;
-	dev.read = i2c_read;
-	dev.write = i2c_write;
+
+	// I2Cの読み書き関数を設定。BMM150Compassクラスのメンバ関数を指定
+	dev.read = i2c_read_static;
+	dev.write = i2c_write_static;
 	dev.delay_ms = delay;
 
 	mag_max.x = mag_max.y = mag_max.z = -2000;

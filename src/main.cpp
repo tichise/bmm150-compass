@@ -11,27 +11,27 @@ BMM150Compass compass(PIN_SDA, PIN_SCL);
 void setup()
 {
   // シリアル通信の初期化
-  Serial.begin(115200);
+  USBSerial.begin(115200);
   while (!Serial)
     ; // シリアルポートが利用可能になるまで待機
 
   // センサーの初期化
   if (compass.initialize() != BMM150_OK)
   {
-    Serial.println("BMM150 initialization failed!");
+    USBSerial.println("BMM150 initialization failed!");
     while (1)
       ; // 初期化に失敗した場合は無限ループ
   }
 
-  Serial.println("BMM150 initialized successfully.");
+  USBSerial.println("BMM150 initialized successfully.");
 
   // オフセットの読み込み
   compass.offset_load();
 
   // キャリブレーションの実行（10秒間）
-  Serial.println("Starting calibration...");
+  USBSerial.println("Starting calibration...");
   compass.calibrate(10000);
-  Serial.println("Calibration complete.");
+  USBSerial.println("Calibration complete.");
 }
 
 void loop()
@@ -40,9 +40,9 @@ void loop()
   float heading = compass.readHeading();
 
   // 結果をシリアルポートに出力
-  Serial.print("Heading: ");
-  Serial.print(heading);
-  Serial.println(" degrees");
+  USBSerial.print("Heading: ");
+  USBSerial.print(heading);
+  USBSerial.println(" degrees");
 
   // ループの遅延（1秒ごとに更新）
   delay(1000);
