@@ -1,3 +1,4 @@
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/tichise/library/BMM150Compass.svg)](https://registry.platformio.org/libraries/tichise/BMM150Compass)
 
 # bmm150-compass
 This wrapper is designed to simplify the use of the m5stack/M5_BMM150 library. The BMM150 is a digital geomagnetic sensor by Bosch, compatible with M5Stack modules. This wrapper streamlines the initialization of the geomagnetic sensor, reading of data, and the calibration process, making it easier to use in Arduino sketches.
