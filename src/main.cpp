@@ -10,6 +10,9 @@ BMM150Compass compass(PIN_SDA, PIN_SCL);
 
 void setup()
 {
+  delay(3000);
+  USBSerial.println("Starting BMM150 Compass example...");
+
   // シリアル通信の初期化
   USBSerial.begin(115200);
   while (!Serial)
