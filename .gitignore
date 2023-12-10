@@ -31,3 +31,4 @@
 *.out
 *.app
 .pio/build/*
+.pio/.DS_Store
