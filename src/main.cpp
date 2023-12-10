@@ -1,40 +1,51 @@
 #include <Arduino.h>
 #include "Preferences.h"
-#include "M5Stack.h"
 #include "math.h"
 #include "M5_BMM150.h"
 #include "M5_BMM150_DEFS.h"
+#include <Wire.h>
+
+// デフォルトピンから変更する場合
+#define PIN_SDA 13
+#define PIN_SCL 15
 
 Preferences prefs;
 
 struct bmm150_dev dev;
-bmm150_mag_data mag_offset; // Compensation magnetometer float data storage 储存补偿磁强计浮子数据
+bmm150_mag_data mag_offset;
 bmm150_mag_data mag_max;
 bmm150_mag_data mag_min;
-TFT_eSprite img = TFT_eSprite(&M5.Lcd);
 
 int8_t i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len)
 {
-  if (M5.I2C.readBytes(dev_id, reg_addr, len, read_data))
-  {                   // Check whether the device ID, address, data exist.
-    return BMM150_OK; // 判断器件的Id、地址、数据是否存在
-  }
-  else
+  Wire.beginTransmission(dev_id);
+  Wire.write(reg_addr);
+  if (Wire.endTransmission() != 0)
   {
     return BMM150_E_DEV_NOT_FOUND;
   }
+
+  Wire.requestFrom((int)dev_id, (int)len);
+  uint8_t i = 0;
+  while (Wire.available())
+  {
+    read_data[i++] = Wire.read();
+  }
+
+  return BMM150_OK;
 }
 
-int8_t i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len)
+int8_t i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
-  if (M5.I2C.writeBytes(dev_id, reg_addr, read_data, len))
-  {                   // Writes data of length len to the specified device address.
-    return BMM150_OK; // 向指定器件地址写入长度为len的数据
-  }
-  else
+  Wire.beginTransmission(dev_id);
+  Wire.write(reg_addr);
+  Wire.write(data, len);
+  if (Wire.endTransmission() != 0)
   {
     return BMM150_E_DEV_NOT_FOUND;
   }
+
+  return BMM150_OK;
 }
 
 int8_t bmm150_initialization()
@@ -80,37 +91,12 @@ void bmm150_offset_load()
   {
     prefs.getBytes("offset", (uint8_t *)&mag_offset, sizeof(bmm150_mag_data));
     prefs.end();
-    Serial.println("bmm150 load offset finish....");
+    USBSerial.println("bmm150 load offset finish....");
   }
   else
   {
-    Serial.println("bmm150 load offset failed....");
+    USBSerial.println("bmm150 load offset failed....");
   }
-}
-
-void setup()
-{
-  M5.begin(true, false, true, false); // Init M5Core(Initialize LCD, serial port).  初始化 M5Core（初始化LCD、串口）
-  M5.Power.begin();                   // Init Power module.  初始化电源设置
-  Wire.begin(21, 22, 400000UL);       // Set the frequency of the SDA SCL.  设置SDA和SCL的频率
-
-  img.setColorDepth(1);             // Set bits per pixel for colour.  设置色深为1
-  img.setTextColor(TFT_WHITE);      // Set the font foreground colour (background is.  设置字体的前景色为TFT_WHITE
-  img.createSprite(320, 240);       // Create a sprite (bitmap) of defined width and height 创建一个指定宽度和高度的Sprite图
-  img.setBitmapColor(TFT_WHITE, 0); // Set the foreground and background colour.  设置位图的前景色和背景颜色
-
-  if (bmm150_initialization() != BMM150_OK)
-  {
-    img.fillSprite(0);                                       // Fill the whole sprite with defined colour.  用定义的颜色填充整个Sprite图
-    img.drawCentreString("BMM150 init failed", 160, 110, 4); // Use font 4 in (160,110)draw string.  使用字体4在(160,110)处绘制字符串
-    img.pushSprite(0, 0);                                    // Push the sprite to the TFT at 0, 0.  将Sprite图打印在(0,0)处
-    for (;;)
-    {
-      delay(100); // delay 100ms.  延迟100ms
-    }
-  }
-
-  bmm150_offset_load();
 }
 
 void bmm150_calibrate(uint32_t calibrate_time)
@@ -118,8 +104,8 @@ void bmm150_calibrate(uint32_t calibrate_time)
   uint32_t calibrate_timeout = 0;
 
   calibrate_timeout = millis() + calibrate_time;
-  Serial.printf("Go calibrate, use %d ms \r\n", calibrate_time); // The serial port outputs formatting characters.  串口输出格式化字符
-  Serial.printf("running ...");
+  USBSerial.printf("Go calibrate, use %d ms \r\n", calibrate_time); // The serial port outputs formatting characters.  串口输出格式化字符
+  USBSerial.printf("running ...");
 
   while (calibrate_timeout > millis())
   {
@@ -147,41 +133,44 @@ void bmm150_calibrate(uint32_t calibrate_time)
   mag_offset.z = (mag_max.z + mag_min.z) / 2;
   bmm150_offset_save();
 
-  Serial.printf("\n calibrate finish ... \r\n");
-  Serial.printf("mag_max.x: %.2f x_min: %.2f \t", mag_max.x, mag_min.x);
-  Serial.printf("y_max: %.2f y_min: %.2f \t", mag_max.y, mag_min.y);
-  Serial.printf("z_max: %.2f z_min: %.2f \r\n", mag_max.z, mag_min.z);
+  USBSerial.printf("\n calibrate finish ... \r\n");
+  USBSerial.printf("mag_max.x: %.2f x_min: %.2f \t", mag_max.x, mag_min.x);
+  USBSerial.printf("y_max: %.2f y_min: %.2f \t", mag_max.y, mag_min.y);
+  USBSerial.printf("z_max: %.2f z_min: %.2f \r\n", mag_max.z, mag_min.z);
+}
+
+void setup()
+{
+  Wire.begin(PIN_SDA, PIN_SCL); // SDAとSCLのピン番号と周波数を必要に応じて変更
+
+  if (bmm150_initialization() != BMM150_OK)
+  {
+    USBSerial.println("BMM150 initialization failed.");
+    while (1)
+    {
+      delay(100); // エラーが発生した場合は無限ループ
+    }
+  }
+
+  bmm150_offset_load();
 }
 
 void loop()
 {
-  char text_string[100];
-  M5.update(); // Read the press state of the key.  读取按键的状态
-  bmm150_read_mag_data(&dev);
-  float head_dir = atan2(dev.data.x - mag_offset.x, dev.data.y - mag_offset.y) * 180.0 / M_PI;
-  Serial.printf("Magnetometer data, heading %.2f\n", head_dir);
-  Serial.printf("MAG X : %.2f \t MAG Y : %.2f \t MAG Z : %.2f \n", dev.data.x, dev.data.y, dev.data.z);
-  Serial.printf("MID X : %.2f \t MID Y : %.2f \t MID Z : %.2f \n", mag_offset.x, mag_offset.y, mag_offset.z);
+  static bool isCalibrated = false;
 
-  img.fillSprite(0);
-  sprintf(text_string, "MAG X: %.2f", dev.data.x);
-  img.drawString(text_string, 10, 20, 4); // draw string with padding.  绘制带有填充的字符串
-  sprintf(text_string, "MAG Y: %.2f", dev.data.y);
-  img.drawString(text_string, 10, 50, 4);
-  sprintf(text_string, "MAG Z: %.2f", dev.data.z);
-  img.drawString(text_string, 10, 80, 4);
-  sprintf(text_string, "HEAD Angle: %.2f", head_dir);
-  img.drawString(text_string, 10, 110, 4);
-  img.drawCentreString("Press BtnA enter calibrate", 160, 150, 4);
-  img.pushSprite(0, 0);
-
-  if (M5.BtnA.wasPressed())
+  if (!isCalibrated)
   {
-    img.fillSprite(0);
-    img.drawCentreString("Flip + rotate core calibration", 160, 110, 4);
-    img.pushSprite(0, 0);
-    bmm150_calibrate(10000);
+    USBSerial.println("Starting calibration...");
+    bmm150_calibrate(10000); // キャリブレーションを実行
+    isCalibrated = true;
   }
 
-  delay(100);
+  bmm150_read_mag_data(&dev);
+  float head_dir = atan2(dev.data.x - mag_offset.x, dev.data.y - mag_offset.y) * 180.0 / M_PI;
+  USBSerial.printf("Magnetometer data, heading %.2f\n", head_dir);
+  USBSerial.printf("MAG X : %.2f \t MAG Y : %.2f \t MAG Z : %.2f \n", dev.data.x, dev.data.y, dev.data.z);
+  USBSerial.printf("MID X : %.2f \t MID Y : %.2f \t MID Z : %.2f \n", mag_offset.x, mag_offset.y, mag_offset.z);
+
+  delay(100); // ループの遅延
 }
