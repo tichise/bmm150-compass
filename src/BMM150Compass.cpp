@@ -184,7 +184,10 @@ void BMM150Compass::calibrate(uint32_t calibrate_time)
 // XYZの値を取得
 void BMM150Compass::getXYZ(int16_t output[3])
 {
+	// 地磁気センサから生のデータを読み込む
 	bmm150_read_mag_data(&dev);
+
+	// 生のデータからオフセットを引いた値をoutputに設定
 	output[0] = dev.data.x - mag_offset.x;
 	output[1] = dev.data.y - mag_offset.y;
 	output[2] = dev.data.z - mag_offset.z;
@@ -193,11 +196,10 @@ void BMM150Compass::getXYZ(int16_t output[3])
 // 方位角をラジアンで取得
 double BMM150Compass::getHeadingRadians()
 {
-	bmm150_read_mag_data(&dev);
 	int16_t output[3];
-	output[0] = dev.data.x - mag_offset.x;
-	output[1] = dev.data.y - mag_offset.y;
-	output[2] = dev.data.z - mag_offset.z;
+
+	// XYZの値を取得
+	getXYZ(output);
 
 	return atan2(output[1], output[0]);
 }
