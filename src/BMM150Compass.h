@@ -27,7 +27,7 @@ public:
 
 	void getXYZ(int16_t output[3]);
 	double getHeadingRadians();
-	double getHeadingDegrees360();
+	float getHeadingDegrees360();
 
 	static int8_t i2c_read_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len);
 	static int8_t i2c_write_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
