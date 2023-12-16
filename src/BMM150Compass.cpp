@@ -201,7 +201,7 @@ double BMM150Compass::getHeadingRadians()
 	// XYZの値を取得
 	getXYZ(output);
 
-	return atan2(output[0], output[1]);
+	return atan2(output[1], output[0]);
 }
 
 // 方位角を度数で取得（-180から180度の範囲）
