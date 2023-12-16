@@ -210,7 +210,6 @@ double BMM150Compass::getHeadingDegrees180()
 	double headingRadians = getHeadingRadians();
 	double headingDegrees = headingRadians * RAD_TO_DEG;
 
-
 	return headingDegrees;
 }
 
