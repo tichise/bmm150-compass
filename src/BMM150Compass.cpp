@@ -208,6 +208,7 @@ double BMM150Compass::getHeadingRadians()
 double BMM150Compass::getHeadingDegrees180()
 {
 	double headingRadians = getHeadingRadians();
+	// RAD_TO_DEGはラジアンから度への変換に使用されます。
 	double headingDegrees = headingRadians * RAD_TO_DEG;
 
 	return headingDegrees;
