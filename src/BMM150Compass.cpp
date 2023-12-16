@@ -181,9 +181,53 @@ void BMM150Compass::calibrate(uint32_t calibrate_time)
 	USBSerial.printf("z_max: %.2f z_min: %.2f \r\n", mag_max.z, mag_min.z);
 }
 
-// 方位角の読み取り
-float BMM150Compass::readHeading()
+// XYZの値を取得
+void BMM150Compass::getXYZ(int16_t output[3])
 {
 	bmm150_read_mag_data(&dev);
-	return atan2(dev.data.x - mag_offset.x, dev.data.y - mag_offset.y) * 180.0 / M_PI;
+	output[0] = dev.data.x - mag_offset.x;
+	output[1] = dev.data.y - mag_offset.y;
+	output[2] = dev.data.z - mag_offset.z;
+}
+
+// 方位角をラジアンで取得
+double BMM150Compass::getHeadingRadians()
+{
+	bmm150_read_mag_data(&dev);
+	int16_t output[3];
+	output[0] = dev.data.x - mag_offset.x;
+	output[1] = dev.data.y - mag_offset.y;
+	output[2] = dev.data.z - mag_offset.z;
+
+	return atan2(output[1], output[0]);
+}
+
+// 方位角を度数で取得（-180から180度の範囲）
+double BMM150Compass::getHeadingDegrees180()
+{
+	double headingRadians = getHeadingRadians();
+	double headingDegrees = headingRadians * RAD_TO_DEG;
+
+	if (headingDegrees > 180)
+	{
+		headingDegrees -= 360;
+	}
+	else if (headingDegrees < -180)
+	{
+		headingDegrees += 360;
+	}
+
+	return headingDegrees;
+}
+
+// 方位角を度数で取得（0から360度の範囲）
+double BMM150Compass::getHeadingDegrees360()
+{
+	double headingDegrees = getHeadingDegrees180();
+	if (headingDegrees < 0)
+	{
+		headingDegrees += 360;
+	}
+
+	return headingDegrees;
 }
