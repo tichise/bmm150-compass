@@ -204,24 +204,14 @@ double BMM150Compass::getHeadingRadians()
 	return atan2(output[0], output[1]);
 }
 
-// 方位角を度数で取得（-180から180度の範囲）
-double BMM150Compass::getHeadingDegrees180()
-{
-	double headingRadians = getHeadingRadians();
-	// RAD_TO_DEGはラジアンから度への変換に使用されます。
-	double headingDegrees = headingRadians * RAD_TO_DEG;
-
-	return headingDegrees;
-}
-
 // 方位角を度数で取得（0から360度の範囲）
-double BMM150Compass::getHeadingDegrees360()
+float BMM150Compass::getHeadingDegrees360()
 {
-	double headingDegrees = getHeadingDegrees180();
-	if (headingDegrees < 0)
-	{
-		headingDegrees += 360;
-	}
+	// getHeadingRadiansを使用して、ラジアンでの方位角を取得
+	double headingRadians = getHeadingRadians();
+
+	// RAD_TO_DEGはラジアンから度への変換に使用されます。
+	float headingDegrees = headingRadians * RAD_TO_DEG;
 
 	return headingDegrees;
 }

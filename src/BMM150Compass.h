@@ -7,6 +7,10 @@
 #include "M5_BMM150_DEFS.h"
 #include <Wire.h>
 
+#define PI2 (2 * M_PI)
+#define RAD_TO_DEG (180.0 / M_PI)
+#define DEG_TO_RAD (M_PI / 180.0)
+
 // このラッパーは、m5stack/M5_BMM150ライブラリを簡単に使用できるように設計されています。
 // BMM150は、Boschのデジタル地磁気センサーで、M5Stackモジュールに対応しています。
 // このラッパークラスは、地磁気センサーの初期化、データの読み取り、およびキャリブレーションプロセスを簡素化し、Arduinoスケッチでの使用を容易にします。
@@ -23,8 +27,7 @@ public:
 
 	void getXYZ(int16_t output[3]);
 	double getHeadingRadians();
-	double getHeadingDegrees180();
-	double getHeadingDegrees360();
+	float getHeadingDegrees360();
 
 	static int8_t i2c_read_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *read_data, uint16_t len);
 	static int8_t i2c_write_static(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
