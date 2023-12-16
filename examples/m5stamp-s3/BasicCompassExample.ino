@@ -42,12 +42,20 @@ void setup()
 
 void loop()
 {
-  // 磁場データを読み取り、方位角を計算
-  float heading = compass.readHeading();
+  int16_t raw_data[3];
+
+	// 磁気センサーの値を取得するメソッド
+	compass.getXYZ(raw_data);
+
+	// 度数での方位角を取得するメソッド（-180から180度の範囲）
+	float headingDegrees180 = compass.getHeadingDegrees180();
+
+	// 度数での方位角を取得するメソッド（0から360度の範囲）
+	float headingDegrees360 = compass.getHeadingDegrees360();
 
   // 結果をシリアルポートに出力
   USBSerial.print("Heading: ");
-  USBSerial.print(heading);
+  USBSerial.print(headingDegrees360);
   USBSerial.println(" degrees");
 
   // ループの遅延（1秒ごとに更新）
