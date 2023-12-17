@@ -48,8 +48,6 @@ void loop()
   compass.getXYZ(raw_data);
 
   // 度数での方位角を取得するメソッド（0から360度の範囲）
-  float headingDegrees360 = compass.getHeadingDegrees360();
-
   double headingDegrees360 = compass.getHeadingDegrees360();
 
   // Grove Degital Compass v2はv1と比べて180度ずれてるので、180度回転させる
