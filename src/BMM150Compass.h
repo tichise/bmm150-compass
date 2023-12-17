@@ -1,15 +1,12 @@
 #ifndef BMM150Compass_h
 #define BMM150Compass_h
 
-#include <Arduino.h>
 #include "Preferences.h"
 #include "M5_BMM150.h"
 #include "M5_BMM150_DEFS.h"
 #include <Wire.h>
 
 #define PI2 (2 * M_PI)
-#define RAD_TO_DEG (180.0 / M_PI)
-#define DEG_TO_RAD (M_PI / 180.0)
 
 // このラッパーは、m5stack/M5_BMM150ライブラリを簡単に使用できるように設計されています。
 // BMM150は、Boschのデジタル地磁気センサーで、M5Stackモジュールに対応しています。
