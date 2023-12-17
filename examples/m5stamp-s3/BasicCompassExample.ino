@@ -44,14 +44,21 @@ void loop()
 {
   int16_t raw_data[3];
 
-	// 磁気センサーの値を取得するメソッド
-	compass.getXYZ(raw_data);
+  // 磁気センサーの値を取得するメソッド
+  compass.getXYZ(raw_data);
 
-	// 度数での方位角を取得するメソッド（-180から180度の範囲）
-	float headingDegrees180 = compass.getHeadingDegrees180();
+  // 度数での方位角を取得するメソッド（0から360度の範囲）
+  float headingDegrees360 = compass.getHeadingDegrees360();
 
-	// 度数での方位角を取得するメソッド（0から360度の範囲）
-	float headingDegrees360 = compass.getHeadingDegrees360();
+  double headingDegrees360 = compass.getHeadingDegrees360();
+
+  // Grove Degital Compass v2はv1と比べて180度ずれてるので、180度回転させる
+  headingDegrees360 += 180; // 角度を180°時計回りに回転
+  if (headingDegrees360 < 0)
+  {
+    headingDegrees360 += 360; // 負の値を修正
+  }
+  headingDegrees360 = fmod(headingDegrees360, 360); // 360°を超える値を修正
 
   // 結果をシリアルポートに出力
   USBSerial.print("Heading: ");
