@@ -147,22 +147,34 @@ void BMM150Compass::calibrate(uint32_t calibrate_time)
 	// キャリブレーションの開始時間からタイムアウト時間まで繰り返す
 	while (calibrate_timeout > millis())
 	{
-		bmm150_read_mag_data(&dev); // read the magnetometer data from registers.  从寄存器读取磁力计数据
+		// 磁力計のデータを読み取る
+		bmm150_read_mag_data(&dev);
+
+		// X軸の最小値と最大値を更新
 		if (dev.data.x)
 		{
 			mag_min.x = (dev.data.x < mag_min.x) ? dev.data.x : mag_min.x;
 			mag_max.x = (dev.data.x > mag_max.x) ? dev.data.x : mag_max.x;
 		}
+
+		// Y軸の最小値と最大値を更新
 		if (dev.data.y)
 		{
 			mag_max.y = (dev.data.y > mag_max.y) ? dev.data.y : mag_max.y;
 			mag_min.y = (dev.data.y < mag_min.y) ? dev.data.y : mag_min.y;
 		}
+
+		// Z軸の最小値と最大値を更新
 		if (dev.data.z)
 		{
 			mag_min.z = (dev.data.z < mag_min.z) ? dev.data.z : mag_min.z;
 			mag_max.z = (dev.data.z > mag_max.z) ? dev.data.z : mag_max.z;
 		}
+
+		// ループの終了をUSBシリアルに出力
+		USBSerial.printf("end running");
+
+		// ループの待機時間を設定
 		delay(100);
 	}
 
@@ -174,7 +186,7 @@ void BMM150Compass::calibrate(uint32_t calibrate_time)
 	// オフセットの保存
 	offset_save();
 
-	// キャリブレーションの終了をUSBシリアルに出力
+	// キャリブレーションの終了と結果をUSBシリアルに出力
 	USBSerial.printf("\n calibrate finish ... \r\n");
 	USBSerial.printf("mag_max.x: %.2f x_min: %.2f \t", mag_max.x, mag_min.x);
 	USBSerial.printf("y_max: %.2f y_min: %.2f \t", mag_max.y, mag_min.y);
