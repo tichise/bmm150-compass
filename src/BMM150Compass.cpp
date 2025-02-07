@@ -102,9 +102,6 @@ int8_t BMM150Compass::initialize()
 	dev.settings.preset_mode = BMM150_PRESETMODE_ENHANCED;
 	rslt |= bmm150_set_presetmode(&dev);
 
-	// rsltの結果をUSBシリアルに出力
-	USBSerial.printf("bmm150_init result: %d\n", rslt);
-
 	// 初期化の結果を返す（BMM150_OKは成功、それ以外はエラー）
 	return rslt;
 }
@@ -139,10 +136,6 @@ void BMM150Compass::calibrate(uint32_t calibrate_time)
 
 	// キャリブレーションのタイムアウト時間を設定
 	calibrate_timeout = millis() + calibrate_time;
-
-	// キャリブレーションの開始をUSBシリアルに出力
-	USBSerial.printf("Go calibrate, use %d ms \r\n", calibrate_time);
-	USBSerial.printf("running ...");
 
 	// キャリブレーションの開始時間からタイムアウト時間まで繰り返す
 	while (calibrate_timeout > millis())
